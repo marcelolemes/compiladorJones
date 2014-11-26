@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.Scanner;
 
-public class Main extends JFrame{
+public class Main{
 
     public static void main(String[] args) throws IOException {
         FilenameFilter filtro = new FilenameFilter() {
@@ -27,6 +28,7 @@ public class Main extends JFrame{
                 StringBuffer comentario= new StringBuffer();
                 ArrayList tokens = new ArrayList();
                 Scanner in = new Scanner(new FileReader(arquivo));
+
                 while(in.hasNextLine()){
                     linhas.add(in.nextLine());
                 }
@@ -40,12 +42,12 @@ public class Main extends JFrame{
                         for (int xz=z;xz<tokens.size();xz++){
 
                             if (tokens.get(xz).toString().endsWith("*/")){
-                                comentario.append(" " + tokens.get(xz).toString());
+                                comentario.append(" " + tokens.get(xz).toString()+"\n");
                                 xz=tokens.size();
 
                             }
                             else {
-                                comentario.append(" " + tokens.get(xz).toString());
+                                comentario.append(" " + tokens.get(xz).toString()+"\n");
                             }
                         }
 
@@ -61,32 +63,57 @@ public class Main extends JFrame{
                             for (int cont=y;cont<tokens.size();cont++ ){
                                 int cont2=cont+1;
                                 if (tokens.get(cont).toString().equals("int")||tokens.get(cont).toString().equals("double")){
-                                    variaveisLocais.add(tokens.get(cont).toString() + " " + tokens.get(cont2).toString());
+                                    variaveisLocais.add(tokens.get(cont).toString() + " " + tokens.get(cont2).toString()+"\n");
                                 }
                                 else if (tokens.get(cont).toString().endsWith("}")){
+                                    x=cont;
                                     cont= tokens.size();
                                 }
                             }
                         }
                         else {
-                            variaveis.add(tokens.get(x).toString() + " " + tokens.get(y).toString());
+                            variaveis.add(tokens.get(x).toString() + " " + tokens.get(y).toString()+"\n");
                         }
                     }
 
                 }
-                System.out.println("Variáveis globais");
-                for(Object o:variaveis){
-                    System.out.println(o.toString());
+
+
+                try
+                {
+                    Formatter saida = new Formatter("variaveis globais.txt");
+                    for(Object o:variaveis){
+                        saida.format(o.toString());
+                        saida.format("\n");
+                    }
+                    saida.close();
                 }
+                catch(Exception erro){
 
-                System.out.println("Variáveis locais");
-                               for(Object p:variaveisLocais){
-                                   System.out.println(p.toString());
-                               }
+                }
+                try
+                {
+                    Formatter saida = new Formatter("variaveis locais.txt");
+                    for(Object p:variaveisLocais){
+                        saida.format(p.toString());
+                        }
+                    saida.close();
+                }
+                catch(Exception erro){
 
-                System.out.println("Comentários");
-                System.out.println(comentario);
+                }
+                try
+                {
+                    Formatter saida = new Formatter("comentários.txt");
 
+
+                        saida.format(comentario.toString());
+
+                    saida.close();
+                }
+                catch(Exception erro){
+
+                }
 
             }
         }
